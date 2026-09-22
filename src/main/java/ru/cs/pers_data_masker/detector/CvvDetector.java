@@ -15,7 +15,8 @@ public class CvvDetector extends AbstractRegexDetector {
 
     private static final String CVV_REGEX = "\\b\\d{3}\\b";
     private static final Pattern CONTEXT = Pattern.compile(
-            "(?i)(cvv|security\\s*code|код\\s*подтверждения|код\\s*безопасности)");
+            "(cvv|security\\s*code|код\\s*подтверждения|код\\s*безопасности)",
+            Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
     public CvvDetector() {
         super(CVV_REGEX, PiiType.CVV.name(), 80);

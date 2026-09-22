@@ -17,9 +17,11 @@ public class AddressDetector extends AbstractRegexDetector {
     private static final String ADDRESS_REGEX =
             "\\b\\d{6}\\b";
     private static final Pattern CONTEXT = Pattern.compile(
-            "(?i)(г\\.|город|ул\\.|улица|дом|квартира|кв\\.|проспект|пр-т|область|обл\\.|край|республика)");
+            "(г\\.|город|ул\\.|улица|дом|квартира|кв\\.|проспект|пр-т|область|обл\\.|край|республика)",
+            Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     private static final Pattern BANK_CONTEXT = Pattern.compile(
-            "(?i)(банк|отделение\\s*банка|офис\\s*банка|филиал\\s*банка)");
+            "(банк|отделение\\s*банка|офис\\s*банка|филиал\\s*банка)",
+            Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
     public AddressDetector() {
         super(ADDRESS_REGEX, PiiType.ADDRESS.name(), 40);

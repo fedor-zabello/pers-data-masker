@@ -13,7 +13,8 @@ import ru.cs.pers_data_masker.domain.PiiType;
 public class BirthPlaceDetector extends AbstractRegexDetector {
 
     private static final String BIRTH_PLACE_REGEX =
-            "(?i)(?:родился\\s+в|место\\s+рождения\\s*[:\\-]?\\s*|род\\.\\s*)(?:г\\.\\s*)?"
+            "(?i)(?:родился\\s+в\\s*|место\\s+рождения\\s*[:\\-]?\\s*|род\\.\\s*)"
+                    + "(?:г\\.\\s*|городе\\s+|города\\s+)?"
                     + "[А-ЯЁ][а-яё]+(?:\\s+[А-ЯЁ][а-яё]+)?";
 
     public BirthPlaceDetector() {

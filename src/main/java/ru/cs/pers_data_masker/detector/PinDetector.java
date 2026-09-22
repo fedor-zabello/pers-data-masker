@@ -13,7 +13,8 @@ import java.util.regex.Pattern;
 public class PinDetector extends AbstractRegexDetector {
 
     private static final String PIN_REGEX = "\\b\\d{4}\\b";
-    private static final Pattern CONTEXT = Pattern.compile("(?i)(пин|pin)");
+    private static final Pattern CONTEXT = Pattern.compile(
+            "(пин|pin)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
     public PinDetector() {
         super(PIN_REGEX, PiiType.PIN.name(), 80);

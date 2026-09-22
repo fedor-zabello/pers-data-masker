@@ -17,7 +17,8 @@ public class CardHolderDetector extends AbstractRegexDetector {
     private static final String HOLDER_REGEX =
             "\\b[A-Z][a-z]+\\s+[A-Z][a-z]+\\b";
     private static final Pattern CONTEXT = Pattern.compile(
-            "(?i)(card\\s*holder|holder|держатель\\s*карты|имя\\s*на\\s*карте)");
+            "(card\\s*holder|holder|держатель\\s*карты|имя\\s*на\\s*карте)",
+            Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
     public CardHolderDetector() {
         super(HOLDER_REGEX, PiiType.CARD_HOLDER.name(), 60);
