@@ -12,7 +12,9 @@ import java.util.regex.Pattern;
 public class PassportDepartmentCodeDetector extends AbstractRegexDetector {
 
     private static final String CODE_REGEX = "\\b\\d{3}-\\d{3}\\b";
-    private static final Pattern CONTEXT = Pattern.compile("(?i)(код\\s*подразделения|подразделение)");
+    private static final Pattern CONTEXT = Pattern.compile(
+            "(код\\s*подразделения|подразделение)",
+            Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
     public PassportDepartmentCodeDetector() {
         super(CODE_REGEX, PiiType.PASSPORT_DEPARTMENT_CODE.name(), 70);

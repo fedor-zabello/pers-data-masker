@@ -15,7 +15,8 @@ public class DriverLicenseDetector extends AbstractRegexDetector {
     private static final String LICENSE_REGEX =
             "\\b\\d{4}[\\s\\-]?\\d{6}\\b";
     private static final Pattern CONTEXT = Pattern.compile(
-            "(?i)(водительск|в/у|права|удостоверение\\s*водителя)");
+            "(водительск|в/у|права|удостоверение\\s*водителя)",
+            Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
     public DriverLicenseDetector() {
         super(LICENSE_REGEX, PiiType.DRIVER_LICENSE.name(), 70);

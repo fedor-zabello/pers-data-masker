@@ -18,7 +18,8 @@ public class PassportDetector extends AbstractRegexDetector {
     private static final String PASSPORT_REGEX =
             "\\b\\d{4}[\\s\\-]?\\d{6}\\b";
     private static final Pattern CONTEXT = Pattern.compile(
-            "(?i)(паспорт|серия|номер\\s*паспорта|удостоверение)");
+            "(паспорт|серия|номер\\s*паспорта|удостоверение)",
+            Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
     public PassportDetector() {
         super(PASSPORT_REGEX, PiiType.PASSPORT.name(), 70);
