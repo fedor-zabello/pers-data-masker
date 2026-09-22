@@ -1,3 +1,24 @@
 spring:
   application:
     name: pers-data-masker
+  threads:
+    virtual:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+pii:
+  systems:
+    default:
+      enabled: true
+      demasking: true
+      types: [FULL_NAME, BIRTH_DATE, BIRTH_PLACE, PASSPORT, CITIZENSHIP, PASSPORT_ISSUER,
+              PASSPORT_DEPARTMENT_CODE, PASSPORT_ISSUE_DATE, DRIVER_LICENSE, ADDRESS,
+              EMAIL, PHONE, INN, CARD_NUMBER, CVV, PIN, CARD_HOLDER]
