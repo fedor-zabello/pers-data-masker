@@ -12,11 +12,12 @@ import java.util.List;
 /**
  * Строит маску из спанов.
  *
- * <p>Спаны сортируются по {@code start} по убыванию и применяются справа налево —
- * так уже обработанные (более правые) позиции не сдвигаются при замене текущего
- * спана переменной длины. Одновременно с заменой вычисляются координаты фрагмента
- * в итоговой строке ({@code maskStart}/{@code maskEnd}) и формируется
- * {@link MaskFragment} для каждого спана.
+ * <p>Спаны сортируются по {@code start} по возрастанию и применяются слева направо.
+ * Каждая замена переменной длины сдвигает все последующие позиции, поэтому ведётся
+ * накопительный {@code offset} (разница между длиной маски и оригинала всех уже
+ * обработанных спанов). Координаты фрагмента в итоговой строке
+ * ({@code maskStart}/{@code maskEnd}) вычисляются как {@code span.start() + offset},
+ * что гарантирует корректность демаскирования при любом числе спанов.
  */
 @Component
 public class Masker {
@@ -32,20 +33,21 @@ public class Masker {
             return MaskingResult.empty(text);
         }
         List<Span> sorted = new ArrayList<>(spans);
-        sorted.sort(Comparator.comparingInt(Span::start).reversed());
+        sorted.sort(Comparator.comparingInt(Span::start));
 
         StringBuilder sb = new StringBuilder(text);
         List<MaskFragment> fragments = new ArrayList<>(sorted.size());
+        int offset = 0;
 
         for (Span span : sorted) {
             String masked = typeResolver.strategyFor(span.type()).mask(span.type(), span.original());
-            int maskStart = span.start();
-            sb.replace(maskStart, span.end(), masked);
+            int maskStart = span.start() + offset;
+            sb.replace(maskStart, maskStart + span.original().length(), masked);
             int maskEnd = maskStart + masked.length();
             fragments.add(new MaskFragment(maskStart, maskEnd, span.type(), span.original()));
+            offset += masked.length() - span.original().length();
         }
 
-        fragments.sort(Comparator.comparingInt(MaskFragment::maskStart));
         return new MaskingResult(sb.toString(), fragments);
     }
 }
