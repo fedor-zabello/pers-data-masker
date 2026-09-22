@@ -90,7 +90,10 @@ public class ProcessService {
         if (!config.demasking()) {
             throw new DemaskingNotAllowedException(systemId);
         }
-        return demask(payload, existing);
+        String result = demask(payload, existing);
+        store.remove(payloadId);
+        log.info("Demasked payload_id={} fragments={}", payloadId, existing.size());
+        return result;
     }
 
     private String mask(String payload, String payloadId, SystemConfig config) {
