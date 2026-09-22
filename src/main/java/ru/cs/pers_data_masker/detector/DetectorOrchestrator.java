@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.cs.pers_data_masker.domain.Span;
+import ru.cs.pers_data_masker.pydetect.PyDetectProperties;
+import ru.cs.pers_data_masker.pydetect.PyPiiDetector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,10 +30,14 @@ public class DetectorOrchestrator {
     private final List<PiiDetector> detectors;
     private final SpanConflictResolver conflictResolver;
     private final Map<String, Integer> priorities;
+    private final boolean pythonOnly;
 
-    public DetectorOrchestrator(List<PiiDetector> detectors, SpanConflictResolver conflictResolver) {
+    public DetectorOrchestrator(List<PiiDetector> detectors,
+                                SpanConflictResolver conflictResolver,
+                                PyDetectProperties pyDetectProperties) {
         this.detectors = detectors;
         this.conflictResolver = conflictResolver;
+        this.pythonOnly = pyDetectProperties.isEnabled();
         this.priorities = new HashMap<>();
         for (PiiDetector detector : detectors) {
             priorities.put(detector.type(), detector.priority());
@@ -41,6 +47,10 @@ public class DetectorOrchestrator {
     /**
      * Находит все ПД в тексте для заданного набора разрешённых типов.
      *
+     * <p>Если включён Python-режим ({@code pydetect.enabled=true}), используются
+     * только детекторы Python ({@link PyPiiDetector}); встроенные Java-детекторы
+     * пропускаются.
+     *
      * @param text          исходный текст
      * @param allowedTypes  набор имён типов, разрешённых для системы
      * @return непересекающиеся спаны
@@ -48,11 +58,20 @@ public class DetectorOrchestrator {
     public List<Span> detect(String text, Set<String> allowedTypes) {
         List<Span> all = new ArrayList<>();
         for (PiiDetector detector : detectors) {
-            if (!allowedTypes.contains(detector.type())) {
+            if (pythonOnly && !(detector instanceof PyPiiDetector)) {
+                continue;
+            }
+            if (!pythonOnly && !allowedTypes.contains(detector.type())) {
                 continue;
             }
             try {
-                all.addAll(detector.detect(text));
+                List<Span> found = detector.detect(text);
+                if (pythonOnly) {
+                    found = found.stream()
+                            .filter(s -> allowedTypes.contains(s.type()))
+                            .toList();
+                }
+                all.addAll(found);
             } catch (RuntimeException e) {
                 log.warn("Detector {} failed, skipping its type", detector.type(), e);
             }
