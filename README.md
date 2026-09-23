@@ -3,7 +3,8 @@
 Сервис-прокси между системой-потребителем и LLM: идентифицирует персональные
 данные (ПД) в тексте, маскирует их перед отправкой в LLM и демаскирует ответ.
 
-Реализует единый контракт `POST /process` для нагрузочного тестирования.
+Реализует единый контракт `POST /persmasker/process` для нагрузочного
+тестирования.
 
 ---
 
@@ -17,17 +18,18 @@
 
 ## Запуск
 
-### Локально (Maven)
+### Локально (Maven Wrapper)
 
 ```bash
 # 1. Сборка и запуск тестов
-mvn test
+./mvnw test
 
 # 2. Запуск приложения
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
-Приложение стартует на `http://localhost:8080`.
+Приложение стартует на `http://localhost:8080`, эндпоинт доступен по пути
+`/persmasker/process`.
 
 ### Docker
 
@@ -87,7 +89,7 @@ pii:
 ### Контракт
 
 ```
-POST /process
+POST /persmasker/process
 Content-Type: application/json
 
 { "payload": "<строка>", "payload_id": "<идентификатор>" }
@@ -107,7 +109,7 @@ Content-Type: application/json
 #### 1. Маскирование
 
 ```bash
-curl -X POST http://localhost:8080/process \
+curl -X POST http://localhost:8080/persmasker/process \
   -H "Content-Type: application/json" \
   -d '{"payload":"Иванов Иван Иванович, email ivan@mail.ru, тел +7 (900) 123-45-67","payload_id":"req-001"}'
 ```
@@ -121,7 +123,7 @@ curl -X POST http://localhost:8080/process \
 #### 2. Демаскирование (тот же `payload_id`)
 
 ```bash
-curl -X POST http://localhost:8080/process \
+curl -X POST http://localhost:8080/persmasker/process \
   -H "Content-Type: application/json" \
   -d '{"payload":"И. И. И., email i***@mail.ru, тел +7 (9**) ***-**-**","payload_id":"req-001"}'
 ```
@@ -135,7 +137,7 @@ curl -X POST http://localhost:8080/process \
 #### 3. Идентификация системы через заголовок
 
 ```bash
-curl -X POST http://localhost:8080/process \
+curl -X POST http://localhost:8080/persmasker/process \
   -H "Content-Type: application/json" \
   -H "X-System-Id: system-a" \
   -d '{"payload":"ivan@mail.ru","payload_id":"req-002"}'
@@ -217,7 +219,7 @@ Prometheus-метрики доступны на `http://localhost:8080/actuator/
 ## Тесты
 
 ```bash
-mvn test
+./mvnw test
 ```
 
 Покрытие: unit-тесты детекторов, маскирования и разрешения пересечений,
