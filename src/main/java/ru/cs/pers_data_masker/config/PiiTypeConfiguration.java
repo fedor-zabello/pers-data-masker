@@ -2,7 +2,6 @@ package ru.cs.pers_data_masker.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.cs.pers_data_masker.detector.PiiDetector;
 import ru.cs.pers_data_masker.domain.PiiType;
@@ -31,16 +30,7 @@ public class PiiTypeConfiguration {
         validateIntegrity();
     }
 
-    /**
-     * Регистрирует кастомные детекторы как бины {@code PiiDetector}, чтобы они
-     * попали в {@code DetectorOrchestrator} через {@code List<PiiDetector>}.
-     */
-    @Bean
-    public java.util.List<PiiDetector> customPiiDetectors() {
-        return customRegistry.detectors();
-    }
-
-    private void validateIntegrity() {
+private void validateIntegrity() {
         Set<String> builtin = Arrays.stream(PiiType.values())
                 .map(Enum::name)
                 .collect(Collectors.toSet());

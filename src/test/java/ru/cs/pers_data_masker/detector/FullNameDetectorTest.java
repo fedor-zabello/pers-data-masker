@@ -62,6 +62,11 @@ class FullNameDetectorTest {
         assertDetected("Клиент Иванов Иван", "Иванов Иван");
     }
 
+    @Test
+    void detectsAllCapsName() {
+        assertDetected("ИВАНОВ ИВАН ИВАНОВИЧ", "ИВАНОВ ИВАН ИВАНОВИЧ");
+    }
+
     private void assertDetected(String text, String expected) {
         List<Span> spans = detector.detect(text);
         assertThat(spans).isNotEmpty();

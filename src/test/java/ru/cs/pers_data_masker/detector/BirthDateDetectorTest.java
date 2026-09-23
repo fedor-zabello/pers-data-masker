@@ -57,6 +57,13 @@ class BirthDateDetectorTest {
         assertThat(spans).isEmpty();
     }
 
+    @Test
+    void confidenceIsHighWithContext() {
+        List<Span> spans = detector.detect("Дата рождения: 15.03.1990.");
+        assertThat(spans).hasSize(1);
+        assertThat(spans.get(0).confidence()).isEqualTo(0.9);
+    }
+
     private void assertDetected(String text, String expected) {
         List<Span> spans = detector.detect(text);
         assertThat(spans).hasSize(1);

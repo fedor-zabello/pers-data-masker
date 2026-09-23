@@ -32,6 +32,11 @@ class PhoneDetectorTest {
     }
 
     @Test
+    void detectsWithDotSeparators() {
+        assertDetected("+7 900.123.45.67", "+7 900.123.45.67");
+    }
+
+    @Test
     void ignoresDigitsWithoutPrefixAndSeparators() {
         assertThat(detector.detect("9001234567")).isEmpty();
     }

@@ -36,6 +36,7 @@ public class SpanConflictResolver {
         sorted.sort(Comparator
                 .comparingInt(Span::start)
                 .thenComparing(Comparator.comparingInt((Span s) -> priorityResolver.applyAsInt(s.type())).reversed())
+                .thenComparing(Comparator.comparingDouble(Span::confidence).reversed())
                 .thenComparing(Comparator.comparingInt(Span::length).reversed()));
 
         List<Span> result = new ArrayList<>();
@@ -57,6 +58,9 @@ public class SpanConflictResolver {
         int currentPriority = priorityResolver.applyAsInt(current.type());
         if (candidatePriority != currentPriority) {
             return candidatePriority > currentPriority;
+        }
+        if (candidate.confidence() != current.confidence()) {
+            return candidate.confidence() > current.confidence();
         }
         return candidate.length() > current.length();
     }

@@ -20,6 +20,8 @@ public enum PiiType {
     PASSPORT_ISSUE_DATE("Дата выдачи паспорта"),
     DRIVER_LICENSE("Серия и номер в/у"),
     ADDRESS("Адрес"),
+    REGISTRATION_ADDRESS("Адрес регистрации"),
+    RESIDENCE_ADDRESS("Адрес проживания"),
     EMAIL("Email"),
     PHONE("Номер телефона"),
     INN("ИНН"),

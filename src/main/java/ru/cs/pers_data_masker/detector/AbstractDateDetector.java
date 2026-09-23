@@ -35,4 +35,12 @@ public abstract class AbstractDateDetector extends AbstractRegexDetector {
         String around = text.substring(from, to);
         return context.matcher(around).find();
     }
+
+    @Override
+    protected double confidence(String text, int start, int end, String original) {
+        int from = Math.max(0, start - 40);
+        int to = Math.min(text.length(), end + 20);
+        String around = text.substring(from, to);
+        return context.matcher(around).find() ? 0.9 : 0.4;
+    }
 }

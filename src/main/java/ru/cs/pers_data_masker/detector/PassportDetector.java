@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class PassportDetector extends AbstractRegexDetector {
 
     private static final String PASSPORT_REGEX =
-            "\\b\\d{4}[\\s\\-]?\\d{6}\\b";
+            "\\b\\d{4}[\\s\\-.]?\\d{6}\\b";
     private static final Pattern CONTEXT = Pattern.compile(
             "(паспорт|серия|номер\\s*паспорта|удостоверение)",
             Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
@@ -30,5 +30,12 @@ public class PassportDetector extends AbstractRegexDetector {
         int from = Math.max(0, start - 60);
         String before = text.substring(from, start);
         return CONTEXT.matcher(before).find();
+    }
+
+    @Override
+    protected double confidence(String text, int start, int end, String original) {
+        int from = Math.max(0, start - 60);
+        String before = text.substring(from, start);
+        return CONTEXT.matcher(before).find() ? 0.9 : 0.4;
     }
 }

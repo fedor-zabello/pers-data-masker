@@ -28,13 +28,46 @@ pii:
         keep-end: 2
         mask-char: '*'
         preserve-separators: true
+    - name: CONTRACT_NUMBER
+      pattern: '\b№\s?\d{4,8}\b'
+      priority: 40
+      context: [договор, контракт, contract]
+      require-context: true
+      context-window: 40
+      masking:
+        keep-start: 1
+        keep-end: 2
+        mask-char: '*'
+        preserve-separators: true
+    - name: PAYMENT_ACCOUNT
+      pattern: '\b\d{13,19}\b'
+      priority: 45
+      checksum: luhn
+      masking:
+        keep-start: 4
+        keep-end: 4
+        mask-char: '*'
+        preserve-separators: true
   systems:
     default:
       enabled: true
       demasking: true
       types: [FULL_NAME, BIRTH_DATE, BIRTH_PLACE, PASSPORT, CITIZENSHIP, PASSPORT_ISSUER,
               PASSPORT_DEPARTMENT_CODE, PASSPORT_ISSUE_DATE, DRIVER_LICENSE, ADDRESS,
-              EMAIL, PHONE, INN, CARD_NUMBER, CVV, PIN, CARD_HOLDER, SNILS]
+              REGISTRATION_ADDRESS, RESIDENCE_ADDRESS,
+              EMAIL, PHONE, INN, CARD_NUMBER, CVV, PIN, CARD_HOLDER, SNILS, CONTRACT_NUMBER,
+              PAYMENT_ACCOUNT]
+    bank:
+      enabled: true
+      demasking: true
+      types: [CARD_NUMBER, CVV, PIN, CARD_HOLDER, PHONE, EMAIL]
+    hr:
+      enabled: true
+      demasking: true
+      types: [FULL_NAME, BIRTH_DATE, BIRTH_PLACE, PASSPORT, CITIZENSHIP, PASSPORT_ISSUER,
+              PASSPORT_DEPARTMENT_CODE, PASSPORT_ISSUE_DATE, DRIVER_LICENSE, ADDRESS,
+              REGISTRATION_ADDRESS, RESIDENCE_ADDRESS,
+              INN, SNILS]
 server:
   tomcat:
     max-swallow-size: 20MB
