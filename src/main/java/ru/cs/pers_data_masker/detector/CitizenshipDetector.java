@@ -20,14 +20,8 @@ public class CitizenshipDetector extends AbstractRegexDetector {
                     + "Франции|Италии|Испании|США|Китая|Индии|Турции|"
                     + "Израиля|Финляндии|Польши|Чехии|Сербии|Болгарии";
 
-    private static final String REPUBLICS =
-            "Республика\\s+(?:Казахстан|Беларусь|Узбекистан|Таджикистан|"
-                    + "Кыргызстан|Армения|Азербайджан|Молдова|Молдавия|"
-                    + "Латвия|Литва|Эстония|Польша|Чехия|Сербия|Болгария|"
-                    + "Финляндия|Германия|Франция|Италия|Испания|Китай|Индия|Турция)";
-
     private static final String CITIZENSHIP_REGEX =
-            "(?i)(?:гражданин|гражданство|гражданка)\\s*:?\\s*(?:(?:" + COUNTRIES + ")|(?:" + REPUBLICS + "))";
+            "(?i)(?:гражданин|гражданство|гражданка)\\s+(?:" + COUNTRIES + ")";
 
     public CitizenshipDetector() {
         super(CITIZENSHIP_REGEX, PiiType.CITIZENSHIP.name(), 50);
