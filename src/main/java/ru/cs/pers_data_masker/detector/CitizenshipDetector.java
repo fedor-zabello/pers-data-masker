@@ -3,27 +3,27 @@ package ru.cs.pers_data_masker.detector;
 import org.springframework.stereotype.Component;
 import ru.cs.pers_data_masker.domain.PiiType;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
- * Детектор гражданства.
+ * Детектор гражданства: фраза «гражданин/гражданство ...» + название страны.
  *
- * <p>Ловит фразу «гражданин/гражданство ...» и захватывает название страны.
+ * <p>Название страны ограничено словарём (РФ, Россия, Российская Федерация и
+ * распространённые страны), чтобы не ловить фамилии («Гражданин Петров»).
  */
 @Component
 public class CitizenshipDetector extends AbstractRegexDetector {
 
+    private static final String COUNTRIES =
+            "РФ|России|Российской\\s+Федерации|Российская\\s+Федерация|Россия|Беларуси|"
+                    + "Белоруссии|Казахстана|Украины|Узбекистана|Таджикистана|"
+                    + "Киргизии|Кыргызстана|Армении|Азербайджана|Грузии|"
+                    + "Молдовы|Молдавии|Латвии|Литвы|Эстонии|Германии|"
+                    + "Франции|Италии|Испании|США|Китая|Индии|Турции|"
+                    + "Израиля|Финляндии|Польши|Чехии|Сербии|Болгарии";
+
     private static final String CITIZENSHIP_REGEX =
-            "(?i)(?:гражданин|гражданство|гражданка)\\s+(?:РФ|России|Российской\\s+Федерации|"
-                    + "[А-ЯЁ][а-яё]+)";
+            "(?i)(?:гражданин|гражданство|гражданка)\\s+(?:" + COUNTRIES + ")";
 
     public CitizenshipDetector() {
         super(CITIZENSHIP_REGEX, PiiType.CITIZENSHIP.name(), 50);
-    }
-
-    @Override
-    protected boolean accept(String text, int start, int end, String original) {
-        return true;
     }
 }

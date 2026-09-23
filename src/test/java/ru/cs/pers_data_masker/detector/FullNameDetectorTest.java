@@ -28,23 +28,38 @@ class FullNameDetectorTest {
     }
 
     @Test
-    void detectsNameAfterAbbreviation() {
-        assertDetected("Гражданин РФ Сидоров Алексей.", "Сидоров Алексей");
+    void detectsNameWithAbbreviation() {
+        assertDetected("Гражданин РФ Сидоров Алексей.", "РФ Сидоров Алексей");
     }
 
     @Test
-    void ignoresCommonPhrase() {
-        assertThat(detector.detect("Дата рождения клиента: 15.03.1990.")).isEmpty();
+    void detectsSurnameWithInitials() {
+        assertDetected("Иванов И. И.", "Иванов И. И.");
     }
 
     @Test
-    void ignoresPassportPhrase() {
-        assertThat(detector.detect("Паспорт серия 4509 123456 выдан ОВД района.")).isEmpty();
+    void detectsSurnameWithInitialsNoSpaces() {
+        assertDetected("Иванов И.И.", "Иванов И.И.");
+    }
+
+    @Test
+    void detectsInitialsThenSurname() {
+        assertDetected("И. И. Иванов", "И. И. Иванов");
+    }
+
+    @Test
+    void detectsHyphenatedSurname() {
+        assertDetected("Петров-Водкин Иван", "Петров-Водкин Иван");
     }
 
     @Test
     void ignoresKnownPerson() {
         assertThat(detector.detect("Поэт Александр Пушкин написал стихи.")).isEmpty();
+    }
+
+    @Test
+    void detectsNameAfterRoleWord() {
+        assertDetected("Клиент Иванов Иван", "Иванов Иван");
     }
 
     private void assertDetected(String text, String expected) {

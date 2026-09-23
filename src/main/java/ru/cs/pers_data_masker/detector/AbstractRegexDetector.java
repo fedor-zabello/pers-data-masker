@@ -62,6 +62,11 @@ public abstract class AbstractRegexDetector implements PiiDetector {
         return type;
     }
 
+    /** Возвращает скомпилированный regex-паттерн (для подклассов с кастомным detect). */
+    protected Pattern pattern() {
+        return pattern;
+    }
+
     @Override
     public int priority() {
         return priority;
