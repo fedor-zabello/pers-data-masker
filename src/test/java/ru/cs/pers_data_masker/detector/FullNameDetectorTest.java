@@ -67,6 +67,22 @@ class FullNameDetectorTest {
         assertDetected("ИВАНОВ ИВАН ИВАНОВИЧ", "ИВАНОВ ИВАН ИВАНОВИЧ");
     }
 
+    @Test
+    void ignoresInnMarker() {
+        assertThat(detector.detect("ИНН организации: 7707083893")).isEmpty();
+    }
+
+    @Test
+    void ignoresInnFullDecoding() {
+        assertThat(detector.detect("Идентификационный номер налогоплательщика 500100732259"))
+                .isEmpty();
+    }
+
+    @Test
+    void ignoresLegalPartyWord() {
+        assertThat(detector.detect("Стороны пришли к соглашению")).isEmpty();
+    }
+
     private void assertDetected(String text, String expected) {
         List<Span> spans = detector.detect(text);
         assertThat(spans).isNotEmpty();
