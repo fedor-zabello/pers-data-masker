@@ -27,6 +27,7 @@ public class DefaultMaskingStrategy implements MaskingStrategy {
             case "CARD_NUMBER" -> maskCardNumber(original);
             case "INN" -> maskInn(original);
             case "PASSPORT", "DRIVER_LICENSE" -> maskPassport(original);
+            case "MILITARY_ID", "SEAMAN_PASSPORT" -> maskDigitsOnly(original);
             case "CVV", "PIN" -> maskAll(original);
             case "ADDRESS", "REGISTRATION_ADDRESS", "RESIDENCE_ADDRESS" -> maskAddress(original);
             default -> maskAll(original);
@@ -101,6 +102,15 @@ public class DefaultMaskingStrategy implements MaskingStrategy {
     }
 
     private static String maskAddress(String original) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < original.length(); i++) {
+            char c = original.charAt(i);
+            sb.append(Character.isDigit(c) ? '*' : c);
+        }
+        return sb.toString();
+    }
+
+    private static String maskDigitsOnly(String original) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < original.length(); i++) {
             char c = original.charAt(i);

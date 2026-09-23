@@ -19,6 +19,8 @@ public enum PiiType {
     PASSPORT_DEPARTMENT_CODE("Код подразделения"),
     PASSPORT_ISSUE_DATE("Дата выдачи паспорта"),
     DRIVER_LICENSE("Серия и номер в/у"),
+    MILITARY_ID("Серия и номер военного билета"),
+    SEAMAN_PASSPORT("Серия и номер паспорта моряка"),
     ADDRESS("Адрес"),
     REGISTRATION_ADDRESS("Адрес регистрации"),
     RESIDENCE_ADDRESS("Адрес проживания"),
