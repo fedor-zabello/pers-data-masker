@@ -27,7 +27,6 @@
 | [BIRTH_DATE.md](BIRTH_DATE.md) | Дата рождения | `BirthDateDetector` | американский формат, ложное срабатывание |
 | [PHONE.md](PHONE.md) | Телефон | `PhoneDetector` | точки-разделители, ложное срабатывание |
 | [PASSPORT.md](PASSPORT.md) | Паспорт | `PassportDetector` | серия с точкой |
-| [ADDRESS.md](ADDRESS.md) | Адрес | `AddressDetector` | расхождение версий серверов (деплой) |
 | [SERVICE.md](SERVICE.md) | — (сервис) | `ProcessService`/`CorrelationStore` | идемпотентность, Content-Type 500 |
 
 ## Типы без проблем
@@ -52,4 +51,3 @@ cd blackBox && python3 test_runner.py --url http://161.104.16.21:8080/persmasker
 5. `INN.md`, `CARD_NUMBER.md` — +2 кейса каждый (ослабить чек-суммы)
 6. `PHONE.md`, `PASSPORT.md`, `BIRTH_DATE.md` — +1 кейс каждый
 7. `SERVICE.md` — идемпотентность + обработка ошибок
-8. `ADDRESS.md` — задача деплоя, не код
