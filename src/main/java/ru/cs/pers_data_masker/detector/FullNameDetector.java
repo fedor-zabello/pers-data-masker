@@ -57,8 +57,15 @@ public class FullNameDetector extends AbstractRegexDetector {
     );
 
     public FullNameDetector() {
-        super(NAME_REGEX, PiiType.FULL_NAME.name(), 40);
+        this(null);
     }
+
+    public FullNameDetector(NerModelClient nerClient) {
+        super(NAME_REGEX, PiiType.FULL_NAME.name(), 40);
+        this.nerClient = nerClient;
+    }
+
+    private final NerModelClient nerClient;
 
     @Override
     protected boolean accept(String text, int start, int end, String original) {
@@ -81,5 +88,14 @@ public class FullNameDetector extends AbstractRegexDetector {
             }
         }
         return true;
+    }
+
+    @Override
+    protected double confidence(String text, int start, int end, String original) {
+        if (nerClient == null || !nerClient.isEnabled()) {
+            return 1.0;
+        }
+        boolean isPerson = !nerClient.detectPersons(original).isEmpty();
+        return isPerson ? 0.9 : 0.3;
     }
 }
