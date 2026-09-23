@@ -34,8 +34,7 @@ pii:
 
 pydetect:
   enabled: true
-  host: localhost
-  port: 50051
+  url: http://localhost:8000
   timeout-ms: 1000
   type-mapping:
     PERSON: FULL_NAME

@@ -36,16 +36,16 @@ public class PyPiiDetector implements PiiDetector {
 
     @Override
     public List<Span> detect(String text) {
-        List<ru.cs.pers_data_masker.pydetect.proto.Span> remote = client.detect(text);
+        List<PyDetectSpan> remote = client.detect(text);
         List<Span> spans = new ArrayList<>();
-        for (ru.cs.pers_data_masker.pydetect.proto.Span s : remote) {
-            String javaType = typeMapping.get(s.getType());
+        for (PyDetectSpan s : remote) {
+            String javaType = typeMapping.get(s.type());
             if (javaType == null) {
-                log.debug("Skipping unmapped python type {}", s.getType());
+                log.debug("Skipping unmapped python type {}", s.type());
                 continue;
             }
-            String original = text.substring(s.getStart(), s.getEnd());
-            spans.add(new Span(s.getStart(), s.getEnd(), javaType, original));
+            String original = text.substring(s.start(), s.end());
+            spans.add(new Span(s.start(), s.end(), javaType, original));
         }
         return spans;
     }

@@ -18,11 +18,8 @@ public class PyDetectProperties {
     /** Включён ли Python-детектор. */
     private boolean enabled = false;
 
-    /** Хост gRPC-сервера Python. */
-    private String host = "localhost";
-
-    /** Порт gRPC-сервера Python. */
-    private int port = 50051;
+    /** Базовый URL HTTP-сервиса Python. */
+    private String url = "http://localhost:8000";
 
     /** Таймаут одного вызова в миллисекундах. */
     private long timeoutMs = 500;
@@ -38,20 +35,12 @@ public class PyDetectProperties {
         this.enabled = enabled;
     }
 
-    public String getHost() {
-        return host;
+    public String getUrl() {
+        return url;
     }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public long getTimeoutMs() {
