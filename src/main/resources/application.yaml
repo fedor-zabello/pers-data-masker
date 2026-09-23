@@ -4,6 +4,10 @@ spring:
   threads:
     virtual:
       enabled: true
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
 management:
   endpoints:
@@ -32,5 +36,8 @@ pii:
               PASSPORT_DEPARTMENT_CODE, PASSPORT_ISSUE_DATE, DRIVER_LICENSE, ADDRESS,
               EMAIL, PHONE, INN, CARD_NUMBER, CVV, PIN, CARD_HOLDER, SNILS]
 server:
+  tomcat:
+    max-swallow-size: 20MB
+    max-http-form-post-size: 20MB
   servlet:
     context-path: /persmasker
