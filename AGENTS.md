@@ -72,3 +72,32 @@ Java 21, Spring Boot 4.1.1, Maven. Пакет: `ru.cs.pers_data_masker`.
 (`docs/PLAN.md` этап 11) требует unit-тесты на каждый детектор, маскирование и
 `SpanConflictResolver`, плюс интеграционный тест цикла mask→unmask по `payload_id`
 через MockMvc. При добавлении детектора/стратегии добавляй тесты.
+
+### Тесты в Bruno
+
+Тесты для коллекций Bruno добавляются в блок `runtime.scripts` с `type: tests`.
+Код — JS-функции `test(...)` с `expect(...)`. Доступны `res.getStatus()` и
+`res.getBody()`. Пример:
+
+```yaml
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should be able to login", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("should return json", function () {
+          expect(res.getBody()).to.eql({
+            result: "Клиент И. И. И. обратился в отделение банка.",
+          });
+        });
+```
+
+Правила:
+- Один `test(...)` на проверку; имя — человекочитаемое описание ожидания.
+- `res.getStatus()` — HTTP-статус, `res.getBody()` — тело ответа (объект).
+- Для сравнения тела целиком используй `expect(res.getBody()).to.eql({...})`.
+- При добавлении/изменении эндпоинта добавляй/обновляй соответствующие тесты в
+  коллекции Bruno.
