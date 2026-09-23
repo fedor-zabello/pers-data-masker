@@ -3,4 +3,5 @@
 /target/
 /.opencode/
 /scripts/
+/scripts/server-credentials.env
 /blackBox/

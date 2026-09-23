@@ -10,6 +10,6 @@ import ru.cs.pers_data_masker.domain.PiiType;
 public class BirthDateDetector extends AbstractDateDetector {
 
     public BirthDateDetector() {
-        super(PiiType.BIRTH_DATE.name(), 50, "(?i)(родил|рождения|дата\\s*рождения|д\\.р\\.)");
+        super(PiiType.BIRTH_DATE.name(), 50, "(?i)(родил|рождения|дата\\s*рождения|д\\.р\\.|birth\\s*date|born)");
     }
 }
