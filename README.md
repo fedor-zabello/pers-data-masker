@@ -4,7 +4,8 @@
 данные (ПД) в тексте, маскирует их перед отправкой в LLM и демаскирует ответ.
 
 Реализует единый контракт `POST /persmasker/process` для нагрузочного
-тестирования.
+тестирования. Обработка CPU-bound (regex) выполняется на виртуальных потоках
+(`spring.threads.virtual.enabled=true`).
 
 ---
 
@@ -29,7 +30,8 @@
 ```
 
 Приложение стартует на `http://localhost:8080`, эндпоинт доступен по пути
-`/persmasker/process`.
+`/persmasker/process` (задаётся `server.servlet.context-path` в
+`application.yaml`).
 
 ### Docker
 

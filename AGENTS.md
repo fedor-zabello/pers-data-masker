@@ -15,9 +15,8 @@ Java 21, Spring Boot 4.1.1, Maven. Пакет: `ru.cs.pers_data_masker`.
   `server.servlet.context-path: /persmasker`, поэтому эндпоинт доступен как
   `POST /persmasker/process`, а не `/process` (README устарел). При изменении
   конфига не ломай контракт нагрузочного теста.
-- **`application.yaml` сейчас сломан**: `spring.threads.virtual.enabled:` без
-  значения (пусто). Виртуальные потоки фактически не включены. Если чинишь —
-  поставь `true`.
+- **Виртуальные потоки включены**: `spring.threads.virtual.enabled: true` в
+  `application.yaml`. Обработка CPU-bound (regex), блокирующего I/O нет.
 - **Masker работает слева направо с накопительным offset** (`Masker.java`): спаны
   сортируются по `start` по возрастанию, каждая замена переменной длины сдвигает
   последующие позиции, поэтому координаты фрагмента считаются как

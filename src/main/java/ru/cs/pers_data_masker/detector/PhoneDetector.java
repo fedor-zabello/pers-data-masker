@@ -25,8 +25,10 @@ public class PhoneDetector extends AbstractRegexDetector {
 
     @Override
     protected boolean accept(String text, int start, int end, String original) {
-        boolean hasPrefix = original.startsWith("+7") || original.startsWith("8") || original.startsWith("7");
+        boolean hasPlusOrEight = original.startsWith("+7") || original.startsWith("8");
         boolean hasSeparator = SEPARATOR.matcher(original).find();
-        return hasPrefix || hasSeparator;
+        boolean bareSevenWith11Digits = original.startsWith("7")
+                && original.replaceAll("\\D", "").length() == 11;
+        return hasPlusOrEight || hasSeparator || bareSevenWith11Digits;
     }
 }

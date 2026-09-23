@@ -12,18 +12,54 @@ class InnDetectorTest {
     private final InnDetector detector = new InnDetector();
 
     @Test
-    void detectsValid10DigitInn() {
-        assertDetected("ИНН 7707083893", "7707083893");
-    }
-
-    @Test
-    void detectsValid12DigitInn() {
+    void detectsValid12DigitInnWithContext() {
         assertDetected("ИНН 500100732259", "500100732259");
     }
 
     @Test
-    void ignoresInvalidChecksum() {
-        assertThat(detector.detect("ИНН 1234567890")).isEmpty();
+    void detectsValid12DigitInnCaseInsensitive() {
+        assertDetected("инн 500100732259", "500100732259");
+        assertDetected("Inn 500100732259", "500100732259");
+        assertDetected("ИНН физического лица 500100732259", "500100732259");
+    }
+
+    @Test
+    void detectsValid12DigitInnWithFullDecoding() {
+        assertDetected("идентификационный номер налогоплательщика 500100732259",
+                "500100732259");
+    }
+
+    @Test
+    void ignores10DigitLegalEntityInn() {
+        assertThat(detector.detect("ИНН 7707083893")).isEmpty();
+    }
+
+    @Test
+    void invalidChecksumWithoutContextHasLowConfidence() {
+        List<Span> spans = detector.detect("номер 123456789012");
+        assertThat(spans).isNotEmpty();
+        assertThat(spans.get(0).confidence()).isEqualTo(0.4);
+    }
+
+    @Test
+    void detectsInvalidChecksumWithContext() {
+        List<Span> spans = detector.detect("ИНН 123456789012");
+        assertThat(spans).isNotEmpty();
+        assertThat(spans.get(0).confidence()).isEqualTo(0.6);
+    }
+
+    @Test
+    void confidenceIsHighWithContext() {
+        List<Span> spans = detector.detect("ИНН 500100732259");
+        assertThat(spans).isNotEmpty();
+        assertThat(spans.get(0).confidence()).isEqualTo(0.9);
+    }
+
+    @Test
+    void confidenceIsMediumWithoutContext() {
+        List<Span> spans = detector.detect("номер 500100732259");
+        assertThat(spans).isNotEmpty();
+        assertThat(spans.get(0).confidence()).isEqualTo(0.6);
     }
 
     private void assertDetected(String text, String expected) {

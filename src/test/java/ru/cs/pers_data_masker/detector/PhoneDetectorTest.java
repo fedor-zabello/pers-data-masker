@@ -41,6 +41,16 @@ class PhoneDetectorTest {
         assertThat(detector.detect("9001234567")).isEmpty();
     }
 
+    @Test
+    void ignoresBareSevenPrefix10Digits() {
+        assertThat(detector.detect("7707083893")).isEmpty();
+    }
+
+    @Test
+    void detectsBareSevenPrefix11Digits() {
+        assertDetected("79001234567", "79001234567");
+    }
+
     private void assertDetected(String text, String expected) {
         List<Span> spans = detector.detect(text);
         assertThat(spans).isNotEmpty();
