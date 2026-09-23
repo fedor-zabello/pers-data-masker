@@ -1,0 +1,6 @@
+services:
+  pers-data-masker:
+    build: .
+    container_name: pers-data-masker
+    ports:
+      - "8080:8080"
