@@ -34,7 +34,10 @@ public class CustomPiiTypeRegistry {
         for (CustomPiiTypeConfig config : properties.customTypes()) {
             validate(config);
             byName.put(config.name(), config);
-            detectors.put(config.name(), new RegexPiiDetector(config.pattern(), config.name(), config.priorityOrDefault()));
+            detectors.put(config.name(), new RegexPiiDetector(
+                    config.pattern(), config.name(), config.priorityOrDefault(),
+                    config.context(), config.requireContextOrDefault(), config.contextWindowOrDefault(),
+                    config.checksum()));
             strategies.put(config.name(), new FlexibleMaskingStrategy(config.maskingOrDefault()));
             log.info("Registered custom PII type '{}'", config.name());
         }
@@ -61,6 +64,19 @@ public class CustomPiiTypeRegistry {
         }
         if (m.maskChar() == null || m.maskChar().isEmpty()) {
             throw new IllegalArgumentException("mask-char must not be empty for type '" + config.name() + "'");
+        }
+        if (config.requireContextOrDefault() && config.context().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "require-context=true requires non-empty context for type '" + config.name() + "'");
+        }
+        if (config.contextWindowOrDefault() < 0) {
+            throw new IllegalArgumentException("context-window must be >= 0 for type '" + config.name() + "'");
+        }
+        if (config.checksum() != null && !config.checksum().isBlank()
+                && ChecksumRegistry.forName(config.checksum()) == null) {
+            throw new IllegalArgumentException(
+                    "Unknown checksum algorithm '" + config.checksum() + "' for type '" + config.name()
+                            + "'. Supported: luhn, inn, snils");
         }
     }
 

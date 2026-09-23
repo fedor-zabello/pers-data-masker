@@ -22,8 +22,8 @@ import java.util.Set;
 @Component
 public class FullNameDetector extends AbstractRegexDetector {
 
-    private static final String FULL_WORD = "[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)?";
-    private static final String INITIAL = "[А-ЯЁ]\\.";
+    private static final String FULL_WORD = "[А-ЯЁа-яё][а-яё]+(?:-[А-ЯЁа-яё][а-яё]+)?";
+    private static final String INITIAL = "[А-ЯЁа-яё]\\.";
 
     private static final Set<String> ROLE_WORDS = Set.of(
             "Клиент", "Клиентка", "Сотрудник", "Сотрудница", "Гражданин", "Гражданка",
@@ -62,10 +62,16 @@ public class FullNameDetector extends AbstractRegexDetector {
     @Override
     protected boolean accept(String text, int start, int end, String original) {
         String[] words = original.split("\\s+");
-        if (words.length == 0 || !Character.isUpperCase(words[0].charAt(0))) {
+        if (words.length == 0) {
             return false;
         }
-        if (ROLE_WORDS.contains(words[0])) {
+        String first = words[0];
+        boolean upperFirst = Character.isUpperCase(first.charAt(0));
+        boolean allCaps = first.chars().allMatch(c -> !Character.isLetter(c) || Character.isUpperCase(c));
+        if (!upperFirst && !allCaps) {
+            return false;
+        }
+        if (ROLE_WORDS.contains(first)) {
             return false;
         }
         for (String w : words) {

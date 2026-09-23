@@ -26,6 +26,21 @@ class CitizenshipDetectorTest {
         assertThat(detector.detect("Гражданин Петров")).isEmpty();
     }
 
+    @Test
+    void detectsCitizenshipWithColon() {
+        assertDetected("Гражданство: РФ", "Гражданство: РФ");
+    }
+
+    @Test
+    void detectsRepublicGenitive() {
+        assertDetected("Гражданин Республики Казахстан", "Гражданин Республики Казахстан");
+    }
+
+    @Test
+    void detectsRepublicNominative() {
+        assertDetected("Гражданство: Республика Беларусь", "Гражданство: Республика Беларусь");
+    }
+
     private void assertDetected(String text, String expected) {
         List<Span> spans = detector.detect(text);
         assertThat(spans).isNotEmpty();

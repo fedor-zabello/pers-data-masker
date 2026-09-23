@@ -26,4 +26,11 @@ public class PassportDepartmentCodeDetector extends AbstractRegexDetector {
         String before = text.substring(from, start);
         return CONTEXT.matcher(before).find();
     }
+
+    @Override
+    protected double confidence(String text, int start, int end, String original) {
+        int from = Math.max(0, start - 40);
+        String before = text.substring(from, start);
+        return CONTEXT.matcher(before).find() ? 0.9 : 0.4;
+    }
 }

@@ -13,12 +13,17 @@ package ru.cs.pers_data_masker.domain;
  * маску при демаскировании (маска почти всегда другой длины). Для этого
  * используется {@link MaskFragment}.
  *
- * @param start    координата начала в исходном тексте (включительно)
- * @param end      координата конца в исходном тексте (исключительно)
- * @param type     имя типа ПД
- * @param original исходный фрагмент текста
+ * @param start      координата начала в исходном тексте (включительно)
+ * @param end        координата конца в исходном тексте (исключительно)
+ * @param type       имя типа ПД
+ * @param original   исходный фрагмент текста
+ * @param confidence вероятность того, что фрагмент действительно является ПД (0..1)
  */
-public record Span(int start, int end, String type, String original) {
+public record Span(int start, int end, String type, String original, double confidence) {
+
+    public Span(int start, int end, String type, String original) {
+        this(start, end, type, original, 1.0);
+    }
 
     public int length() {
         return end - start;

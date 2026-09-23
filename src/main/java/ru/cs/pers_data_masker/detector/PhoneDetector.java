@@ -15,9 +15,9 @@ import java.util.regex.Pattern;
 public class PhoneDetector extends AbstractRegexDetector {
 
     private static final String PHONE_REGEX =
-            "(?<![0-9])(?:(?:\\+7|8|7)[\\s\\-]?)?"
-                    + "(?:\\(?\\d{3}\\)?[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2})(?![0-9])";
-    private static final Pattern SEPARATOR = Pattern.compile("[()\\s\\-]");
+            "(?<![0-9])(?:(?:\\+7|8|7)[\\s\\-.]?)?"
+                    + "(?:\\(?\\d{3}\\)?[\\s\\-.]?\\d{3}[\\s\\-.]?\\d{2}[\\s\\-.]?\\d{2})(?![0-9])";
+    private static final Pattern SEPARATOR = Pattern.compile("[()\\s\\-.]");
 
     public PhoneDetector() {
         super(PHONE_REGEX, PiiType.PHONE.name(), 50);

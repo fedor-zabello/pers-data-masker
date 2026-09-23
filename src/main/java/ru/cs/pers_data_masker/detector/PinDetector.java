@@ -27,4 +27,12 @@ public class PinDetector extends AbstractRegexDetector {
         String around = text.substring(from, to);
         return CONTEXT.matcher(around).find();
     }
+
+    @Override
+    protected double confidence(String text, int start, int end, String original) {
+        int from = Math.max(0, start - 30);
+        int to = Math.min(text.length(), end + 30);
+        String around = text.substring(from, to);
+        return CONTEXT.matcher(around).find() ? 0.9 : 0.4;
+    }
 }

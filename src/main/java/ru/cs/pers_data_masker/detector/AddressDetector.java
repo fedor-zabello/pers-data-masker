@@ -59,7 +59,8 @@ public class AddressDetector extends AbstractRegexDetector {
         while (matcher.find()) {
             String original = matcher.group();
             if (accept(text, matcher.start(), matcher.end(), original)) {
-                spans.add(new Span(matcher.start(), matcher.end(), type(), original));
+                spans.add(new Span(matcher.start(), matcher.end(), type(), original,
+                        confidence(text, matcher.start(), matcher.end(), original)));
             }
         }
         Matcher trigger = triggerPattern.matcher(text);
@@ -71,7 +72,7 @@ public class AddressDetector extends AbstractRegexDetector {
             int start = trigger.start(1);
             int end = trigger.end(1);
             if (accept(text, start, end, addr)) {
-                spans.add(new Span(start, end, type(), addr));
+                spans.add(new Span(start, end, type(), addr, confidence(text, start, end, addr)));
             }
         }
         return spans;
@@ -83,5 +84,10 @@ public class AddressDetector extends AbstractRegexDetector {
         int to = Math.min(text.length(), end + 40);
         String around = text.substring(from, to);
         return !BANK_CONTEXT.matcher(around).find();
+    }
+
+    @Override
+    protected double confidence(String text, int start, int end, String original) {
+        return 0.9;
     }
 }

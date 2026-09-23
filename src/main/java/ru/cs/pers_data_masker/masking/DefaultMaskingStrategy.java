@@ -28,7 +28,7 @@ public class DefaultMaskingStrategy implements MaskingStrategy {
             case "INN" -> maskInn(original);
             case "PASSPORT", "DRIVER_LICENSE" -> maskPassport(original);
             case "CVV", "PIN" -> maskAll(original);
-            case "ADDRESS" -> maskAddress(original);
+            case "ADDRESS", "REGISTRATION_ADDRESS", "RESIDENCE_ADDRESS" -> maskAddress(original);
             default -> maskAll(original);
         };
     }
@@ -51,13 +51,17 @@ public class DefaultMaskingStrategy implements MaskingStrategy {
     }
 
     private static String maskPhone(String original) {
-        // сохраняем "+7 (9" и маскируем остальное, сохраняя разделители
+        // с префиксом (+7/8/7) сохраняем "+7 (9" (2 цифры: код страны + первая
+        // цифра кода оператора), без префикса — только первую цифру кода
+        // оператора, остальное маскируем, сохраняя разделители
+        boolean hasPrefix = original.startsWith("+7") || original.startsWith("8") || original.startsWith("7");
+        int keepDigits = hasPrefix ? 2 : 1;
         StringBuilder sb = new StringBuilder();
         int kept = 0;
         for (int i = 0; i < original.length(); i++) {
             char c = original.charAt(i);
             if (Character.isDigit(c)) {
-                if (kept < 4) {
+                if (kept < keepDigits) {
                     sb.append(c);
                 } else {
                     sb.append('*');

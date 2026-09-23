@@ -37,10 +37,25 @@ public abstract class AbstractRegexDetector implements PiiDetector {
         while (matcher.find()) {
             String original = matcher.group();
             if (accept(text, matcher.start(), matcher.end(), original)) {
-                spans.add(new Span(matcher.start(), matcher.end(), type, original));
+                spans.add(new Span(matcher.start(), matcher.end(), type, original,
+                        confidence(text, matcher.start(), matcher.end(), original)));
             }
         }
         return spans;
+    }
+
+    /**
+     * Вычисляет уверенность (0..1) в том, что найденный фрагмент действительно
+     * является ПД. По умолчанию — 1.0. Подклассы переопределяют для учёта
+     * контекста (наличие контекстных слов повышает, отсутствие — понижает).
+     *
+     * @param text     полный исходный текст
+     * @param start    координата начала фрагмента
+     * @param end      координата конца фрагмента
+     * @param original найденный фрагмент
+     */
+    protected double confidence(String text, int start, int end, String original) {
+        return 1.0;
     }
 
     /**
